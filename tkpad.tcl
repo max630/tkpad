@@ -2,6 +2,12 @@
 # Tcl ignores the next line -*- tcl -*- \
 exec wish "$0" -- "$@"
 
+# TODO:
+# * controls in note windows ()
+# * copy, past, basic undo
+# * saving
+# * proper undo log
+
 package require Tk 8.5
 
 proc main {} {
