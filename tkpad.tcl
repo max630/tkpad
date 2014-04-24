@@ -3,7 +3,6 @@
 exec wish "$0" -- "$@"
 
 package require Tk 8.5
-package require tktray
 
 proc main {} {
     make_tray
@@ -60,7 +59,7 @@ proc show_note {note_name} {
     }
 }
 
-proc make_tray {} {
+proc make_tray_tktray {} {
     set icon_data {
     #define icon_width 16
     #define icon_height 16
@@ -81,6 +80,32 @@ proc make_tray {} {
     tktray::icon .tray -image [image create bitmap -data $icon_data -maskdata $icon_mask_data -background lightyellow -foreground black] -docked 1
     bind .tray <Button-3> {wm state . normal}
     bind .tray <Button-1> new_note
+}
+
+proc make_tray_winico {} {
+    global argv0
+    set ico_path [file join [file dirname $argv0] note.ico]
+    set ico_name [winico createfrom $ico_path]
+    winico taskbar add $ico_name -text note -callback {winico_callback %m}
+}
+
+proc winico_callback {event} {
+    if {$event eq "WM_LBUTTONUP"} {
+        new_note
+    } elseif {$event eq "WM_RBUTTONUP"} {
+        wm state . normal
+    }
+}
+
+proc make_tray {} {
+    if {![catch {package require tktray}]} {
+        make_tray_tktray
+    } elseif {![catch {package require Winico}]} {
+        make_tray_winico
+    } else {
+        # TODO: graceful degradation
+        error "No tray plugin"
+    }
 }
 
 proc make_main {} {
