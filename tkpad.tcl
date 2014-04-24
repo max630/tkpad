@@ -30,8 +30,10 @@ proc create_note {note_name} {
         $note_name.text insert 1.0 $notes(${note_name}_text)
     }
     pack $note_name.text -expand 1 -fill both
+    focus $note_name.text
 
     wm protocol $note_name WM_DELETE_WINDOW [list close_note $note_name]
+    bind $note_name <Escape> [list close_note $note_name]
 }
 
 proc close_note {note_name} {
