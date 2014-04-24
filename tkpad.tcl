@@ -26,7 +26,8 @@ proc create_note {note_name} {
     pack $note_name.yscroll -side right -expand 0 -fill y
     text $note_name.text -yscrollcommand [list $note_name.yscroll set]
     if {[info exists notes(${note_name}_text)]} {
-        $note_name.text insert end $notes(${note_name}_text)
+        # FIXME: extra newline
+        $note_name.text insert 1.0 $notes(${note_name}_text)
     }
     pack $note_name.text -expand 1 -fill both
 
