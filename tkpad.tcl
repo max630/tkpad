@@ -77,7 +77,8 @@ proc make_tray_tktray {} {
        0xfc, 0x3f, 0xfc, 0x3f, 0x00, 0x00, 0x00, 0x00};
     }
 
-    tktray::icon .tray -image [image create bitmap -data $icon_data -maskdata $icon_mask_data -background lightyellow -foreground black] -docked 1
+    tktray::icon .tray -image [image create bitmap -data $icon_data -maskdata $icon_mask_data -background yellow -foreground black] -docked 1
+    # TODO: make it appear near, or warp mouse
     bind .tray <Button-3> {wm state . normal}
     bind .tray <Button-1> new_note
 }
@@ -93,14 +94,19 @@ proc winico_callback {event} {
     if {$event eq "WM_LBUTTONUP"} {
         new_note
     } elseif {$event eq "WM_RBUTTONUP"} {
+        # TODO:
+        # * fix focus issues
+        # * make it appear near, or warp mouse
         wm state . normal
     }
 }
 
 proc make_tray {} {
     if {![catch {package require tktray}]} {
+        # apt-get install tk-tktray
         make_tray_tktray
     } elseif {![catch {package require Winico}]} {
+        # install Winico from http://sourceforge.net/projects/tktable/files/winico/0.6/
         make_tray_winico
     } else {
         # TODO: graceful degradation
