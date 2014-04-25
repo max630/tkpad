@@ -92,9 +92,9 @@ proc handle_titleChanged {note_id notes_name note_title_idx write} {
 
     set note_name ".note_$note_id"
     if {[winfo exists $note_name]} {
-        wm title $note_name "Note: $notes(${note_name}_title)"
+        wm title $note_name "Note: $notes($note_title_idx)"
     }
-    .n.button_$note_id configure -text "$notes(${note_name}_title)"
+    .n.button_$note_id configure -text "$notes($note_title_idx)"
 }
 
 proc close_note {note_name} {
