@@ -6,10 +6,13 @@ exec wish "$0" -- "$@"
 # * controls in note windows (which?)
 #  * delete, local search
 # + copy, paste, basic undo
-# * title
+# + title
 # * saving
+#   * locking
+# * cli
+# * search through all
+# * use?
 # * tree structure of notes
-# * search
 # * advanced undo (without losses)
 # * search through undo
 # * proper undo log
