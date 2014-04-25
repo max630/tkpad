@@ -3,9 +3,13 @@
 exec wish "$0" -- "$@"
 
 # TODO:
-# * controls in note windows ()
-# * copy, past, basic undo
+# * controls in note windows (which?)
+#  * delete, local search
+# * copy, paste, basic undo
 # * saving
+# * search
+# * advanced undo (without losses)
+# * search through undo
 # * proper undo log
 
 package require Tk 8.5
