@@ -5,7 +5,7 @@ exec wish "$0" -- "$@"
 # TODO:
 # * controls in note windows (which?)
 #  * delete, local search
-# * copy, paste, basic undo
+# + copy, paste, basic undo
 # * title
 # * saving
 # * tree structure of notes
@@ -17,10 +17,23 @@ exec wish "$0" -- "$@"
 package require Tk 8.5
 
 proc main {} {
+    init_globals
+    init_events
     make_tray
     make_main
     wm withdraw .
-    init_globals
+}
+
+proc init_events {} {
+    event add <<Copy>> <Control-c>
+    event add <<Copy>> <Control-Insert>
+    event add <<Cut>> <Control-x>
+    event add <<Cut>> <Shift-Delete>
+    event add <<Paste>> <Control-v>
+    event add <<Paste>> <Shift-Insert>
+
+    event delete <<Paste>> <Control-y>
+    event add <<Redo>> <Control-y>
 }
 
 proc init_globals {} {
@@ -35,16 +48,17 @@ proc create_note {note_name} {
     toplevel $note_name
     scrollbar $note_name.yscroll
     pack $note_name.yscroll -side right -expand 0 -fill y
-    text $note_name.text -yscrollcommand [list $note_name.yscroll set]
+    text $note_name.text -yscrollcommand [list $note_name.yscroll set] -undo 1
     if {[info exists notes(${note_name}_text)]} {
         # FIXME: extra newline
         $note_name.text insert 1.0 $notes(${note_name}_text)
     }
     pack $note_name.text -expand 1 -fill both
-    focus $note_name.text
 
     wm protocol $note_name WM_DELETE_WINDOW [list close_note $note_name]
     bind $note_name <Escape> [list close_note $note_name]
+
+    focus $note_name.text
 }
 
 proc close_note {note_name} {
