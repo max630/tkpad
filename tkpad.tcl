@@ -59,6 +59,7 @@ proc create_note {note_name} {
     if {[info exists notes(${note_name}_title)]} {
         wm title $note_name "Note: $notes(${note_name}_title)"
     }
+    $note_name.text edit modified 0
     bind $note_name.text <<Modified>> [list handle_textModified $note_name]
 
     pack $note_name.text -expand 1 -fill both
