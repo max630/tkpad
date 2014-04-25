@@ -54,7 +54,7 @@ proc create_note {note_name} {
         $note_name.text insert 1.0 $notes(${note_name}_text)
     }
     if {[info exists notes(${note_name}_title)]} {
-        wm title $note_name $notes(${note_name}_title)
+        wm title $note_name "Note: $notes(${note_name}_title)"
     }
     bind $note_name.text <<Modified>> [list handle_textModified $note_name]
 
@@ -74,13 +74,24 @@ proc handle_textModified {note_name} {
     global notes
     set title [$note_name.text get 1.0 1.end]
     if {$title eq ""} {
-        set title [string replace $note_name 0 5 "Note "]
-    } else {
-        set title "Note: $title"
+        set title [string replace $note_name 0 5]
     }
     set notes(${note_name}_title) $title
-    wm title $note_name $notes(${note_name}_title)
+    wm title $note_name "Note: $notes(${note_name}_title)"
     $note_name.text edit modified 0
+}
+
+proc handle_titleChanged {note_id notes_name note_title_idx write} {
+    if {$notes_name ne "notes" || $write ne "write"} {
+        return
+    }
+    global notes
+
+    set note_name ".note_$note_id"
+    if {[winfo exists $note_name]} {
+        wm title $note_name "Note: $notes(${note_name}_title)"
+    }
+    .n.button_$note_id configure -text "$notes(${note_name}_title)"
 }
 
 proc close_note {note_name} {
@@ -90,10 +101,12 @@ proc close_note {note_name} {
 }
 
 proc new_note {} {
-    global next_note_id
+    global next_note_id notes
     set note_name ".note_$next_note_id"
     create_note $note_name
-    button .n.button_$next_note_id -text "Note $next_note_id" -command [list show_note $note_name]
+    button .n.button_$next_note_id -command [list show_note $note_name]
+    trace add variable notes(${note_name}_title) write [list handle_titleChanged $next_note_id]
+    set notes(${note_name}_title) $next_note_id
     pack .n.button_$next_note_id
     incr next_note_id
 }
