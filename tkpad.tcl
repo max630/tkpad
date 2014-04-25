@@ -53,12 +53,34 @@ proc create_note {note_name} {
         # FIXME: extra newline
         $note_name.text insert 1.0 $notes(${note_name}_text)
     }
+    if {[info exists notes(${note_name}_title)]} {
+        wm title $note_name $notes(${note_name}_title)
+    }
+    bind $note_name.text <<Modified>> [list handle_textModified $note_name]
+
     pack $note_name.text -expand 1 -fill both
 
     wm protocol $note_name WM_DELETE_WINDOW [list close_note $note_name]
     bind $note_name <Escape> [list close_note $note_name]
 
     focus $note_name.text
+}
+
+proc handle_textModified {note_name} {
+    if {![$note_name.text edit modified]} {
+        return
+    }
+
+    global notes
+    set title [$note_name.text get 1.0 1.end]
+    if {$title eq ""} {
+        set title [string replace $note_name 0 5 "Note "]
+    } else {
+        set title "Note: $title"
+    }
+    set notes(${note_name}_title) $title
+    wm title $note_name $notes(${note_name}_title)
+    $note_name.text edit modified 0
 }
 
 proc close_note {note_name} {
