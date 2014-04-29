@@ -24,9 +24,11 @@ package require Tk 8.5
 
 proc main {} {
     init_globals
+    init_fs
     init_events
     make_tray
     make_main
+    load_notes
     wm withdraw .
 }
 
@@ -47,6 +49,19 @@ proc init_globals {} {
     array set notes {}
     global next_note_id
     set next_note_id 1
+    global save_path env
+    set save_path [file join $env(HOME) ".tkpad"]
+}
+
+proc init_fs {} {
+    global save_path
+    file mkdir $save_path
+}
+
+proc load_notes {} {
+    restore_note 1 "Test note 1"
+    restore_note 2 "Test note 2\nThis contains some text"
+    restore_note 3 ""
 }
 
 proc create_note {note_name} {
@@ -79,6 +94,7 @@ proc handle_textModified {note_name} {
     }
 
     global notes
+    set notes(${note_name}_text) [$note_name.text get 1.0 end]
     set title [$note_name.text get 1.0 1.end]
     if {$title eq ""} {
         set title [string replace $note_name 0 5]
@@ -103,7 +119,7 @@ proc handle_titleChanged {note_id notes_name note_title_idx write} {
 
 proc close_note {note_name} {
     global notes
-    set notes(${note_name}_text) [$note_name.text get 1.0 end]
+    #set notes(${note_name}_text) [$note_name.text get 1.0 end]
     destroy $note_name
 }
 
@@ -116,6 +132,26 @@ proc new_note {} {
     set notes(${note_name}_title) $next_note_id
     pack .n.button_$next_note_id
     incr next_note_id
+}
+
+proc restore_note {num content} {
+    global next_note_id notes
+    set note_name ".note_$num"
+    button .n.button_$num -command [list show_note $note_name]
+    pack .n.button_$num
+    trace add variable notes(${note_name}_title) write [list handle_titleChanged $num]
+    set notes(${note_name}_text) $content
+    set first_newline [string first "\n" $content]
+    if {$first_newline > 0} {
+        set notes(${note_name}_title) [string range $content 0 [expr $first_newline - 1]]
+    } elseif {$content ne ""} {
+        set notes(${note_name}_title) $content
+    } else {
+        set notes(${note_name}_title) $num
+    }
+    if {$next_note_id <= $num} {
+        set next_note_id [expr $num + 1]
+    }
 }
 
 proc show_note {note_name} {
