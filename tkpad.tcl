@@ -102,6 +102,12 @@ proc handle_textModified {note_name} {
     set notes(${note_name}_title) $title
     wm title $note_name "Note: $notes(${note_name}_title)"
     $note_name.text edit modified 0
+
+    global save_path
+    set note_path [file join $save_path "text${note_name}"]
+    set f [open $note_path w]
+    puts $f $notes(${note_name}_text)
+    close $f
 }
 
 proc handle_titleChanged {note_id notes_name note_title_idx write} {
