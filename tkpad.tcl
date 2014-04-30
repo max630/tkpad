@@ -106,7 +106,7 @@ proc handle_textModified {note_name} {
     global save_path
     set note_path [file join $save_path "text${note_name}"]
     set f [open $note_path w]
-    puts $f $notes(${note_name}_text)
+    puts -nonewline $f $notes(${note_name}_text)
     close $f
 }
 
