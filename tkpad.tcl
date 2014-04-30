@@ -3,18 +3,21 @@
 exec wish "$0" -- "$@"
 
 # TODO:
-# * controls in note windows (which?)
-#  * delete note, local search
 # + copy, paste, basic undo
 # + title
-# * saving
-#   * locking
+# + saving
+# + loading
+# * controls in note window (opens by single Alt?)
+#   * new note
+#   * main window
+#   * search
 # * cli. Functionality:
 #   * point to the directory
 #   * theme
 #   * else?
 # * search through all
 # * use?
+# * lock in save directory
 # * tree structure of notes
 # * advanced undo (without losses)
 # * search through undo
