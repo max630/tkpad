@@ -11,12 +11,13 @@ exec wish "$0" -- "$@"
 #   * new note
 #   * main window
 #   * search
+# * warn and continue if tray library not available
 # * cli. Functionality:
 #   * point to the directory
 #   * theme
 #   * else?
+# * can be used?
 # * search through all
-# * use?
 # * lock in save directory
 # * tree structure of notes
 # * advanced undo (without losses)
