@@ -59,9 +59,16 @@ proc init_fs {} {
 }
 
 proc load_notes {} {
-    restore_note 1 "Test note 1"
-    restore_note 2 "Test note 2\nThis contains some text"
-    restore_note 3 ""
+    global save_path
+    foreach note_path [glob -directory $save_path "text.note_*"] {
+        set note_basename [file tail $note_path]
+        if ([regexp {^text\.note_([0-9]+)$} $note_basename _ note_idx]) {
+            set in [open $note_path r]
+            set note_content [read $in]
+            close $in
+            restore_note $note_idx $note_content
+        }
+    }
 }
 
 proc create_note {note_name} {
