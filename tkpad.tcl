@@ -7,10 +7,11 @@ exec wish "$0" -- "$@"
 # + title
 # + saving
 # + loading
-# * controls in note window (opens by single Alt?)
+# * controls in note window (opens by single ~Alt~Control?)
 #   * new note
 #   * main window
 #   * search
+# * fallback when no tray is available
 # * warn and continue if tray library not available
 # * cli. Functionality:
 #   * point to the directory
@@ -230,7 +231,6 @@ proc make_tray {} {
         # install Winico from http://sourceforge.net/projects/tktable/files/winico/0.6/
         make_tray_winico
     } else {
-        # TODO: graceful degradation
         error "No tray plugin"
     }
 }
