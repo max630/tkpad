@@ -140,7 +140,9 @@ proc search_note {idx search_widget {dir "forward"}} {
         set from "insert - 1 chard"
     }
 
+    puts [list index [[note_text_tk $idx] index insert]]
     set found [[note_text_tk $idx] search $where $pattern insert $from]
+    puts [list found1 $found]
     if {$found eq ""} {
         set found [[note_text_tk $idx] search $where $pattern $wrap]
     }
