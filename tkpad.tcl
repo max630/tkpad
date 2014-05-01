@@ -77,7 +77,7 @@ proc load_notes {} {
 }
 
 proc note_text_tk {idx} {
-    return .note_${idx}.text
+    return .note_${idx}.main.text
 }
 
 proc note_window_tk {idx} {
@@ -86,27 +86,39 @@ proc note_window_tk {idx} {
 
 proc create_note {idx} {
     global notes
-    set note_name ".note_$idx"
-    toplevel $note_name
-    scrollbar $note_name.yscroll
-    pack $note_name.yscroll -side right -expand 0 -fill y
-    text $note_name.text -yscrollcommand [list $note_name.yscroll set] -undo 1
+    set note_window ".note_$idx"
+    set note_text $note_window.main.text
+
+    toplevel $note_window
+
+    frame $note_window.buttons
+    button $note_window.buttons.new_note -text "New"
+    button $note_window.buttons.main_window -text "Main Window"
+    entry $note_window.buttons.search
+    pack $note_window.buttons.new_note $note_window.buttons.main_window -side left
+    pack $note_window.buttons.search -expand 1 -fill x
+
+    frame $note_window.main
+    scrollbar $note_window.main.yscroll -takefocus 0
+    pack $note_window.main.yscroll -side right -expand 0 -fill y
+    text $note_text -yscrollcommand [list $note_window.main.yscroll set] -undo 1
     if {[info exists notes($idx,text)]} {
         # FIXME: extra newline
-        $note_name.text insert 1.0 $notes($idx,text)
+        $note_text insert 1.0 $notes($idx,text)
     }
     if {[info exists notes($idx,title)]} {
-        wm title $note_name "Note: $notes($idx,title)"
+        wm title $note_window "Note: $notes($idx,title)"
     }
-    $note_name.text edit modified 0
-    bind $note_name.text <<Modified>> [list handle_textModified $idx]
+    pack $note_text -expand 1 -fill both
 
-    pack $note_name.text -expand 1 -fill both
+    pack $note_window.buttons $note_window.main -expand 1 -fill both -side top
 
-    wm protocol $note_name WM_DELETE_WINDOW [list close_note $idx]
-    bind $note_name <Escape> [list close_note $idx]
+    $note_text edit modified 0
+    bind $note_text <<Modified>> [list handle_textModified $idx]
+    wm protocol $note_window WM_DELETE_WINDOW [list close_note $idx]
+    bind $note_window <Escape> [list close_note $idx]
 
-    focus $note_name.text
+    focus $note_text
 }
 
 proc handle_textModified {idx} {
