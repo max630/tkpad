@@ -272,13 +272,17 @@ proc winico_callback {event} {
 
 proc make_tray {} {
     if {![catch {package require tktray}]} {
+    global has_tray
         # apt-get install tk-tktray
         make_tray_tktray
+        set has_tray 1
     } elseif {![catch {package require Winico}]} {
         # install Winico from http://sourceforge.net/projects/tktable/files/winico/0.6/
         make_tray_winico
+        set has_tray 1
     } else {
-        error "No tray plugin"
+        tk_messageBox -type ok -message "Tray support not found"
+        set has_tray 0
     }
 }
 
@@ -289,9 +293,16 @@ proc make_main {} {
     pack .b.quit -side left
     pack .n .b -side top
 
-    wm protocol . WM_DELETE_WINDOW {wm withdraw .}
-    bind . <Escape> {wm withdraw .}
-    bind . <FocusOut> {wm withdraw .}
+    global has_tray
+    if {$has_tray} {
+        wm protocol . WM_DELETE_WINDOW {wm withdraw .}
+        bind . <Escape> {wm withdraw .}
+        bind . <FocusOut> {wm withdraw .}
+    } else {
+        wm protocol . WM_DELETE_WINDOW {wm iconify .}
+        bind . <Escape> {wm iconify .}
+        bind . <FocusOut> {wm iconify .}
+    }
 }
 
 main
