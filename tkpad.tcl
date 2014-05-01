@@ -297,11 +297,11 @@ proc make_main {} {
     if {$has_tray} {
         wm protocol . WM_DELETE_WINDOW {wm withdraw .}
         bind . <Escape> {wm withdraw .}
-        bind . <FocusOut> {wm withdraw .}
+        bind . <FocusOut> {if {%W eq "."} {wm withdraw .}}
     } else {
         wm protocol . WM_DELETE_WINDOW {wm iconify .}
         bind . <Escape> {wm iconify .}
-        bind . <FocusOut> {wm iconify .}
+        bind . <FocusOut> {if {"%W" eq "."} {wm iconify .}}
     }
 }
 
