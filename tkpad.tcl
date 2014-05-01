@@ -132,11 +132,9 @@ proc search_note {idx search_widget {dir "forward"}} {
 
     if {$dir eq "forward"} {
         set where "-forwards"
-        set wrap "1.0"
         set from "insert + 1 chars"
     } else {
         set where "-backwards"
-        set wrap "end"
         set from "insert - 1 chars"
     }
 
