@@ -8,9 +8,7 @@ exec wish "$0" -- "$@"
 # + saving
 # + loading
 # * controls in note window (opens by single ~Alt~Control?)
-#   * new note
-#   * main window
-#   * search
+#   * hiding
 # * fallback when no tray is available
 # * warn and continue if tray library not available
 # * cli. Functionality:
@@ -118,6 +116,9 @@ proc create_note {idx} {
     bind $note_window.buttons.search <Return> [list search_note $idx $note_window.buttons.search]
     bind $note_window <F3> [list search_note $idx $note_window.buttons.search]
     bind $note_window <Shift-F3> [list search_note $idx $note_window.buttons.search backward]
+    bind $note_window <Control-n> [list focus $note_window.buttons.new_note]
+    bind $note_window <Control-m> [list focus $note_window.buttons.main_window]
+    bind $note_window <Control-f> [list focus $note_window.buttons.search]
     wm protocol $note_window WM_DELETE_WINDOW [list close_note $idx]
     bind $note_window <Escape> [list close_note $idx]
 
