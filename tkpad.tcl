@@ -7,10 +7,11 @@ exec wish "$0" -- "$@"
 # + title
 # + saving
 # + loading
+# + fallback when no tray is available
+# + warn and continue if tray library not available
 # * controls in note window (opens by single ~Alt~Control?)
-#   * hiding
-# * fallback when no tray is available
-# * warn and continue if tray library not available
+#   * bar button hiding
+# * note deletion
 # * cli. Functionality:
 #   * point to the directory
 #   * theme
