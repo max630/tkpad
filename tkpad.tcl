@@ -92,8 +92,8 @@ proc create_note {idx} {
     toplevel $note_window
 
     frame $note_window.buttons
-    button $note_window.buttons.new_note -text "New"
-    button $note_window.buttons.main_window -text "Main Window"
+    button $note_window.buttons.new_note -text "New" -command new_note
+    button $note_window.buttons.main_window -text "Main Window" -command {wm state . normal}
     entry $note_window.buttons.search
     pack $note_window.buttons.new_note $note_window.buttons.main_window -side left
     pack $note_window.buttons.search -expand 1 -fill x
