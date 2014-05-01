@@ -76,108 +76,116 @@ proc load_notes {} {
     }
 }
 
-proc create_note {note_name} {
+proc note_text_tk {idx} {
+    return .note_${idx}.text
+}
+
+proc note_window_tk {idx} {
+    return .note_${idx}
+}
+
+proc create_note {idx} {
     global notes
+    set note_name ".note_$idx"
     toplevel $note_name
     scrollbar $note_name.yscroll
     pack $note_name.yscroll -side right -expand 0 -fill y
     text $note_name.text -yscrollcommand [list $note_name.yscroll set] -undo 1
-    if {[info exists notes(${note_name}_text)]} {
+    if {[info exists notes($idx,text)]} {
         # FIXME: extra newline
-        $note_name.text insert 1.0 $notes(${note_name}_text)
+        $note_name.text insert 1.0 $notes($idx,text)
     }
-    if {[info exists notes(${note_name}_title)]} {
-        wm title $note_name "Note: $notes(${note_name}_title)"
+    if {[info exists notes($idx,title)]} {
+        wm title $note_name "Note: $notes($idx,title)"
     }
     $note_name.text edit modified 0
-    bind $note_name.text <<Modified>> [list handle_textModified $note_name]
+    bind $note_name.text <<Modified>> [list handle_textModified $idx]
 
     pack $note_name.text -expand 1 -fill both
 
-    wm protocol $note_name WM_DELETE_WINDOW [list close_note $note_name]
-    bind $note_name <Escape> [list close_note $note_name]
+    wm protocol $note_name WM_DELETE_WINDOW [list close_note $idx]
+    bind $note_name <Escape> [list close_note $idx]
 
     focus $note_name.text
 }
 
-proc handle_textModified {note_name} {
-    if {![$note_name.text edit modified]} {
+proc handle_textModified {idx} {
+    if {![[note_text_tk $idx] edit modified]} {
         return
     }
 
     global notes
-    set notes(${note_name}_text) [$note_name.text get 1.0 end]
-    set title [$note_name.text get 1.0 1.end]
+    set notes($idx,text) [[note_text_tk $idx] get 1.0 end]
+    set title [[note_text_tk $idx] get 1.0 1.end]
     if {$title eq ""} {
-        set title [string replace $note_name 0 5]
+        set title $idx
     }
-    set notes(${note_name}_title) $title
-    wm title $note_name "Note: $notes(${note_name}_title)"
-    $note_name.text edit modified 0
+    set notes($idx,title) $title
+    wm title [note_window_tk $idx] "Note: $notes($idx,title)"
+    [note_text_tk $idx] edit modified 0
 
     global save_path
-    set note_path [file join $save_path "text${note_name}"]
+    set note_path [file join $save_path "text.note_$idx"]
     set f [open $note_path w]
-    puts -nonewline $f $notes(${note_name}_text)
+    puts -nonewline $f $notes($idx,text)
     close $f
 }
 
-proc handle_titleChanged {note_id notes_name note_title_idx write} {
+proc handle_titleChanged {idx notes_name note_title_idx write} {
     if {$notes_name ne "notes" || $write ne "write"} {
         return
     }
     global notes
 
-    set note_name ".note_$note_id"
+    set note_name [note_window_tk $idx]
     if {[winfo exists $note_name]} {
         wm title $note_name "Note: $notes($note_title_idx)"
     }
-    .n.button_$note_id configure -text "$notes($note_title_idx)"
+    .n.button_$idx configure -text "$notes($note_title_idx)"
 }
 
-proc close_note {note_name} {
+proc close_note {idx} {
     global notes
-    #set notes(${note_name}_text) [$note_name.text get 1.0 end]
-    destroy $note_name
+    destroy [note_window_tk $idx]
 }
 
 proc new_note {} {
     global next_note_id notes
-    set note_name ".note_$next_note_id"
-    create_note $note_name
-    button .n.button_$next_note_id -command [list show_note $note_name]
-    trace add variable notes(${note_name}_title) write [list handle_titleChanged $next_note_id]
-    set notes(${note_name}_title) $next_note_id
-    pack .n.button_$next_note_id
+    set idx $next_note_id
     incr next_note_id
+    create_note $idx
+    button .n.button_$idx -command [list show_note $idx]
+    trace add variable notes($idx,title) write [list handle_titleChanged $idx]
+    set notes($idx,title) $idx
+    pack .n.button_$idx
 }
 
-proc restore_note {num content} {
+proc restore_note {idx content} {
     global next_note_id notes
-    set note_name ".note_$num"
-    button .n.button_$num -command [list show_note $note_name]
-    pack .n.button_$num
-    trace add variable notes(${note_name}_title) write [list handle_titleChanged $num]
-    set notes(${note_name}_text) $content
+    button .n.button_$idx -command [list show_note $idx]
+    pack .n.button_$idx
+    trace add variable notes($idx,title) write [list handle_titleChanged $idx]
+    set notes($idx,text) $content
     set first_newline [string first "\n" $content]
     if {$first_newline > 0} {
-        set notes(${note_name}_title) [string range $content 0 [expr $first_newline - 1]]
+        set notes($idx,title) [string range $content 0 [expr $first_newline - 1]]
     } elseif {$content ne ""} {
-        set notes(${note_name}_title) $content
+        set notes($idx,title) $content
     } else {
-        set notes(${note_name}_title) $num
+        set notes($idx,title) $idx
     }
-    if {$next_note_id <= $num} {
-        set next_note_id [expr $num + 1]
+    if {$next_note_id <= $idx} {
+        set next_note_id [expr $idx + 1]
     }
 }
 
-proc show_note {note_name} {
+proc show_note {idx} {
+    set note_name [note_window_tk $idx]
     if {[winfo exists $note_name]} {
         wm state $note_name normal
-        focus -force $note_name
+        focus -force [note_text_tk $idx]
     } else {
-        create_note $note_name
+        create_note $idx
     }
 }
 
