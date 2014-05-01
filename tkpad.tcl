@@ -115,10 +115,41 @@ proc create_note {idx} {
 
     $note_text edit modified 0
     bind $note_text <<Modified>> [list handle_textModified $idx]
+    bind $note_window.buttons.search <Return> [list search_note $idx $note_window.buttons.search]
+    bind $note_window <F3> [list search_note $idx $note_window.buttons.search]
+    bind $note_window <Shift-F3> [list search_note $idx $note_window.buttons.search backward]
     wm protocol $note_window WM_DELETE_WINDOW [list close_note $idx]
     bind $note_window <Escape> [list close_note $idx]
 
     focus $note_text
+}
+
+proc search_note {idx search_widget {dir "forward"}} {
+    set pattern [$search_widget get]
+    if {$pattern eq ""} {
+        return
+    }
+
+    if {$dir eq "forward"} {
+        set where "-forwards"
+        set wrap "1.0"
+        set from "insert + 1 chars"
+    } else {
+        set where "-backwards"
+        set wrap "end"
+        set from "insert - 1 chard"
+    }
+
+    set found [[note_text_tk $idx] search $where $pattern insert $from]
+    if {$found eq ""} {
+        set found [[note_text_tk $idx] search $where $pattern $wrap]
+    }
+
+    if {$found ne ""} {
+        [note_text_tk $idx] mark set insert $found
+        [note_text_tk $idx] see insert
+        focus [note_text_tk $idx]
+    }
 }
 
 proc handle_textModified {idx} {
