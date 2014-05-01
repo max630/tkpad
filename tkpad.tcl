@@ -137,7 +137,7 @@ proc search_note {idx search_widget {dir "forward"}} {
     } else {
         set where "-backwards"
         set wrap "end"
-        set from "insert - 1 chard"
+        set from "insert - 1 chars"
     }
 
     set found [[note_text_tk $idx] search $where $pattern $from]
