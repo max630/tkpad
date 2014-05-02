@@ -62,7 +62,7 @@ proc init_fs {} {
 
 proc load_notes {} {
     global save_path
-    foreach note_path [glob -directory $save_path "text.note_*"] {
+    foreach note_path [glob -nocomplain -directory $save_path "text.note_*"] {
         set note_basename [file tail $note_path]
         if ([regexp {^text\.note_([0-9]+)$} $note_basename _ note_idx]) {
             set in [open $note_path r]
