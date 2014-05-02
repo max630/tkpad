@@ -271,8 +271,8 @@ proc winico_callback {event} {
 }
 
 proc make_tray {} {
-    if {![catch {package require tktray}]} {
     global has_tray
+    if {![catch {package require tktray}]} {
         # apt-get install tk-tktray
         make_tray_tktray
         set has_tray 1
