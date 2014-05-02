@@ -90,7 +90,10 @@ proc create_note {idx} {
 
     frame $note_window.buttons
     button $note_window.buttons.new_note -text "New" -command new_note
-    button $note_window.buttons.main_window -text "Main Window" -command {wm state . normal}
+    button $note_window.buttons.main_window -text "Main Window" -command {
+        wm state . normal
+        focus -force .
+    }
     entry $note_window.buttons.search
     pack $note_window.buttons.new_note $note_window.buttons.main_window -side left
     pack $note_window.buttons.search -expand 1 -fill x
@@ -121,7 +124,7 @@ proc create_note {idx} {
     wm protocol $note_window WM_DELETE_WINDOW [list close_note $idx]
     bind $note_window <Escape> [list close_note $idx]
 
-    focus $note_text
+    focus -force $note_text
 }
 
 proc search_note {idx search_widget {dir "forward"}} {
