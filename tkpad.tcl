@@ -33,7 +33,6 @@ proc main {} {
     make_tray
     make_main
     load_notes
-    wm withdraw .
 }
 
 proc init_events {} {
@@ -301,10 +300,12 @@ proc make_main {} {
         wm protocol . WM_DELETE_WINDOW {wm withdraw .}
         bind . <Escape> {wm withdraw .}
         bind . <FocusOut> {if {%W eq "."} {wm withdraw .}}
+        wm withdraw .
     } else {
         wm protocol . WM_DELETE_WINDOW {wm iconify .}
         bind . <Escape> {wm iconify .}
         bind . <FocusOut> {if {"%W" eq "."} {wm iconify .}}
+        wm iconify .
     }
 }
 
