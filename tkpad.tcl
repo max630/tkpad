@@ -292,6 +292,8 @@ proc make_main {} {
     frame .b
     button .b.quit -text Quit -command {destroy .}
     pack .b.quit -side left
+    button .b.new -text New -command new_note
+    pack .b.new -side left
     pack .n .b -side top
 
     global has_tray
