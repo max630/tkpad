@@ -188,6 +188,7 @@ proc close_note {idx} {
 }
 
 proc new_note {} {
+    hide_main
     global next_note_id notes
     set idx $next_note_id
     incr next_note_id
@@ -218,12 +219,22 @@ proc restore_note {idx content} {
 }
 
 proc show_note {idx} {
+    hide_main
     set note_name [note_window_tk $idx]
     if {[winfo exists $note_name]} {
         wm state $note_name normal
         focus -force [note_text_tk $idx]
     } else {
         create_note $idx
+    }
+}
+
+proc hide_main {} {
+    global has_tray
+    if {$has_tray} {
+        wm withdraw .
+    } else {
+        wm iconify .
     }
 }
 
@@ -296,15 +307,13 @@ proc make_main {} {
 
     global has_tray
     if {$has_tray} {
-        wm protocol . WM_DELETE_WINDOW {wm withdraw .}
-        bind . <Escape> {wm withdraw .}
-        bind . <FocusOut> {if {%W eq "."} {wm withdraw .}}
-        wm withdraw .
+        wm protocol . WM_DELETE_WINDOW hide_main
+        bind . <Escape> hide_main
+        hide_main
     } else {
-        wm protocol . WM_DELETE_WINDOW {wm iconify .}
-        bind . <Escape> {wm iconify .}
-        bind . <FocusOut> {if {"%W" eq "."} {wm iconify .}}
-        wm iconify .
+        wm protocol . WM_DELETE_WINDOW hide_main
+        bind . <Escape> hide_main
+        hide_main
     }
 }
 
