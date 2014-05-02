@@ -12,17 +12,16 @@ exec wish "$0" -- "$@"
 # * controls in note window (opens by single ~Alt~Control?)
 #   * bar button hiding
 # * note deletion
+# * tree structure of notes
 # * cli. Functionality:
 #   * point to the directory
 #   * theme
 #   * else?
-# * can be used?
 # * search through all
 # * lock in save directory
-# * tree structure of notes
 # * advanced undo (without losses)
-# * search through undo
 # * proper undo log
+# * search through undo
 
 package require Tk 8.5
 
