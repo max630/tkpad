@@ -66,6 +66,10 @@ proc load_config {} {
     set config [file join $save_path "config.tcl"]
     if {[file exists $config]} {
         source $config
+    } else {
+        set f [open $config w]
+        puts $f "# font configure TkFixedFont -family {MS Comic Sans}"
+        close $f
     }
 }
 
