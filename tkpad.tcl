@@ -29,6 +29,7 @@ proc main {} {
     init_globals
     init_fs
     init_events
+    load_config
     make_tray
     make_main
     load_notes
@@ -58,6 +59,14 @@ proc init_globals {} {
 proc init_fs {} {
     global save_path
     file mkdir $save_path
+}
+
+proc load_config {} {
+    global save_path
+    set config [file join $save_path "config.tcl"]
+    if {[file exists $config]} {
+        source $config
+    }
 }
 
 proc load_notes {} {
