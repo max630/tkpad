@@ -110,7 +110,7 @@ proc create_note {idx} {
     frame $note_window.main
     scrollbar $note_window.main.yscroll -takefocus 0
     pack $note_window.main.yscroll -side right -expand 0 -fill y
-    text $note_text -yscrollcommand [list $note_window.main.yscroll set] -undo 1
+    text $note_text -yscrollcommand [list $note_window.main.yscroll set] -font TkTextFont -undo 1
     if {[info exists notes($idx,text)]} {
         # FIXME: extra newline
         $note_text insert 1.0 $notes($idx,text)
