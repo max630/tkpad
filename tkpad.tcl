@@ -9,18 +9,19 @@ exec wish "$0" -- "$@"
 # + loading
 # + fallback when no tray is available
 # + warn and continue if tray library not available
+# * tree structure of notes
+# * note deletion
+# * advanced undo (without losses) - stop losing time! designating features first!
+# * proper undo log
+# * here is something to show
 # * controls in note window (opens by single ~Alt~Control?)
 #   * bar button hiding
-# * note deletion
-# * tree structure of notes
 # * cli. Functionality:
 #   * point to the directory
 #   * theme
 #   * else?
 # * search through all
 # * lock in save directory
-# * advanced undo (without losses)
-# * proper undo log
 # * search through undo
 
 package require Tk 8.5
