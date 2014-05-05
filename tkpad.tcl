@@ -124,7 +124,8 @@ proc create_note {idx} {
     }
     pack $note_text -expand 1 -fill both
 
-    pack $note_window.buttons $note_window.main -expand 1 -fill both -side top
+    pack $note_window.buttons -expand 0 -fill both -side top
+    pack $note_window.main -expand 1 -fill both -side top
 
     $note_text edit modified 0
     bind $note_text <<Modified>> [list handle_textModified $idx]
