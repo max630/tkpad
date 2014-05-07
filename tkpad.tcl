@@ -55,24 +55,10 @@ proc init_globals {} {
     set next_note_id 1
     global save_path env
     set save_path [file join $env(HOME) ".tkpad"]
-    set icon_data {
-    #define icon_width 16
-    #define icon_height 16
-    static unsigned char icon_bits[] = {
-       0x00, 0x00, 0x00, 0x00, 0xe0, 0x3f, 0x10, 0x20, 0x08, 0x20, 0x04, 0x20,
-       0x04, 0x20, 0x04, 0x20, 0x04, 0x20, 0x04, 0x20, 0x04, 0x20, 0x04, 0x20,
-       0x04, 0x20, 0xfc, 0x3f, 0x00, 0x00, 0x00, 0x00};
-    }
-    set icon_mask_data {
-    #define mask_width 16
-    #define mask_height 16
-    static unsigned char mask_bits[] = {
-       0x00, 0x00, 0x00, 0x00, 0xe0, 0x3f, 0xf0, 0x3f, 0xf8, 0x3f, 0xfc, 0x3f,
-       0xfc, 0x3f, 0xfc, 0x3f, 0xfc, 0x3f, 0xfc, 0x3f, 0xfc, 0x3f, 0xfc, 0x3f,
-       0xfc, 0x3f, 0xfc, 0x3f, 0x00, 0x00, 0x00, 0x00};
-    }
-    global icon_name
-    set icon_name [image create bitmap -data $icon_data -maskdata $icon_mask_data -background yellow -foreground black]
+    set icon_photo_base64 {R0lGODlhEAAQAKECAP3/WwAAAP///////yH5BAEKAAIALAAAAAAQABAAAAIqlI+pyxIPoQqg2hoS
+vTefzVmeAYbA6JgiUoZoy70qxs5nPb/R/jT+jygAADs=}
+    global icon_photo_name
+    set icon_photo_name [image create photo -data $icon_photo_base64]
 }
 
 proc init_fs {} {
@@ -119,7 +105,7 @@ proc create_note {idx} {
     set note_text $note_window.main.text
 
     toplevel $note_window
-    wm iconphoto $note_window $icon_name
+    # wm iconphoto $note_window $icon_name
 
     frame $note_window.buttons
     button $note_window.buttons.new_note -text "New" -command new_note
@@ -276,8 +262,8 @@ proc hide_main {} {
 }
 
 proc make_tray_tktray {} {
-    global icon_name
-    tktray::icon .tray -image $icon_name -docked 1
+    global icon_photo_name
+    tktray::icon .tray -image $icon_photo_name -docked 1
     # TODO: make it appear near, or warp mouse
     bind .tray <Button-3> {wm state . normal}
     bind .tray <Button-1> new_note
@@ -336,6 +322,9 @@ proc make_main {} {
         bind . <Escape> hide_main
         hide_main
     }
+
+    global icon_photo_name
+    wm iconphoto . -default $icon_photo_name
 }
 
 main
