@@ -59,6 +59,7 @@ proc init_globals {} {
 vTefzVmeAYbA6JgiUoZoy70qxs5nPb/R/jT+jygAADs=}
     global icon_photo_name
     set icon_photo_name [image create photo -data $icon_photo_base64]
+    global global_search_pattern
 }
 
 proc init_fs {} {
@@ -304,13 +305,17 @@ proc make_tray {} {
 }
 
 proc make_main {} {
-    frame .n
     frame .b
     button .b.quit -text Quit -command {destroy .}
     pack .b.quit -side left
     button .b.new -text New -command new_note
     pack .b.new -side left
-    pack .n .b -side top
+    entry .b.search -textvariable global_search_pattern
+    pack .b.search -side left -expand 1 -fill x
+
+    frame .n
+    pack .n -side top -expand 1 -fill both
+    pack .b -side top -expand 0 -fill x
 
     global has_tray
     if {$has_tray} {
