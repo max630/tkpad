@@ -60,6 +60,7 @@ vTefzVmeAYbA6JgiUoZoy70qxs5nPb/R/jT+jygAADs=}
     global icon_photo_name
     set icon_photo_name [image create photo -data $icon_photo_base64]
     global global_search_pattern
+    set global_search_pattern ""
 }
 
 proc init_fs {} {
@@ -305,12 +306,15 @@ proc make_tray {} {
 }
 
 proc make_main {} {
+    global global_search_pattern
+
     frame .b
     button .b.quit -text Quit -command {destroy .}
     pack .b.quit -side left
     button .b.new -text New -command new_note
     pack .b.new -side left
     entry .b.search -textvariable global_search_pattern
+    trace add variable global_search_pattern write handle_global_search_pattern
     pack .b.search -side left -expand 1 -fill x
 
     frame .n
@@ -330,6 +334,36 @@ proc make_main {} {
 
     global icon_photo_name
     wm iconphoto . -default $icon_photo_name
+}
+
+proc handle_global_search_pattern {_n _i write} {
+    if {$write ne "write"} {
+        return
+    }
+
+    global next_note_id notes global_search_pattern
+    set prev_shown ""
+    for {set i 0} {$i < $next_note_id} {incr i} {
+        if {[catch { set content $notes($i,text) }] != 0} {
+            continue
+        }
+        set btn ".n.button_$idx"
+
+        if {[string first $global_search_pattern $content] >= 0} {
+            if {[winfo manager $btn] eq ""} {
+                if {$prev_shown eq ""} {
+                    pack $btn
+                } else {
+                    pack $btn -after ".n.button_$prev_shown"
+                }
+            }
+            set prev_shown $i
+        } else {
+            if {[winfo ismapped $btn] ne ""} {
+                pack forget $btn
+            }
+        }
+    }
 }
 
 main
