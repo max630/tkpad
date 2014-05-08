@@ -102,6 +102,10 @@ proc note_window_tk {idx} {
     return .note_${idx}
 }
 
+proc note_button_tk {idx} {
+    return .n.button_${idx}
+}
+
 proc create_note {idx} {
     global notes icon_name
     set note_window ".note_$idx"
@@ -205,7 +209,7 @@ proc handle_titleChanged {idx notes_name note_title_idx write} {
     if {[winfo exists $note_name]} {
         wm title $note_name "Note: $notes($note_title_idx)"
     }
-    .n.button_$idx configure -text "$notes($note_title_idx)"
+    [note_button_tk $idx] configure -text "$notes($note_title_idx)"
 }
 
 proc close_note {idx} {
@@ -227,8 +231,8 @@ proc new_note {} {
 
 proc restore_note {idx content} {
     global next_note_id notes
-    button .n.button_$idx -command [list show_note $idx]
-    pack .n.button_$idx
+    button [note_button_tk $idx] -command [list show_note $idx]
+    pack [note_button_tk $idx]
     trace add variable notes($idx,title) write [list handle_titleChanged $idx]
     set notes($idx,text) $content
     set first_newline [string first "\n" $content]
@@ -348,14 +352,14 @@ proc handle_global_search_pattern {_n _i write} {
         if {[catch { set content $notes($i,text) }] != 0} {
             continue
         }
-        set btn ".n.button_$i"
+        set btn [note_button_tk $i]
 
         if {$global_search_pattern eq "" || [string first $global_search_pattern $content] >= 0} {
             if {[winfo manager $btn] eq ""} {
                 if {$prev_shown eq ""} {
                     pack $btn
                 } else {
-                    pack $btn -after ".n.button_$prev_shown"
+                    pack $btn -after [note_button_tk $prev_shown]
                 }
             }
             set prev_shown $i
