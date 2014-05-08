@@ -349,7 +349,7 @@ proc handle_global_search_pattern {_n _i write} {
         }
         set btn ".n.button_$i"
 
-        if {[string first $global_search_pattern $content] >= 0} {
+        if {$global_search_pattern eq "" || [string first $global_search_pattern $content] >= 0} {
             if {[winfo manager $btn] eq ""} {
                 if {$prev_shown eq ""} {
                     pack $btn
