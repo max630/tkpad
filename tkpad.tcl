@@ -347,7 +347,7 @@ proc handle_global_search_pattern {_n _i write} {
         if {[catch { set content $notes($i,text) }] != 0} {
             continue
         }
-        set btn ".n.button_$idx"
+        set btn ".n.button_$i"
 
         if {[string first $global_search_pattern $content] >= 0} {
             if {[winfo manager $btn] eq ""} {
