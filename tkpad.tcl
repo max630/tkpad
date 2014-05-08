@@ -103,7 +103,7 @@ proc note_window_tk {idx} {
 }
 
 proc note_button_tk {idx} {
-    return .n.button_${idx}
+    return .n.scrolled.buttons.button_${idx}
 }
 
 proc create_note {idx} {
@@ -323,6 +323,13 @@ proc make_main {} {
     pack .b.search -side left -expand 1 -fill x
 
     frame .n
+    scrollbar .n.scroll -takefocus 0
+    pack .n.scroll -side right -expand 0 -fill y
+    canvas .n.scrolled -yscrollcommand {.n.scroll set}
+    pack .n.scrolled -expand 1 -fill both
+    frame .n.scrolled.buttons
+    .n.scrolled create window 0 0 -window .n.scrolled.buttons -anchor nw
+
     pack .n -side top -expand 1 -fill both
     pack .b -side top -expand 0 -fill x
 
