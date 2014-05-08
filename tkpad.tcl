@@ -9,6 +9,8 @@ exec wish "$0" -- "$@"
 # + loading
 # + fallback when no tray is available
 # + warn and continue if tray library not available
+# + search through all
+# * scrolled button frame
 # * tree structure of notes
 # * note deletion
 # * advanced undo (without losses) - stop losing time! designating features first!
@@ -20,7 +22,6 @@ exec wish "$0" -- "$@"
 #   * point to the directory
 #   * theme
 #   * else?
-# * search through all
 # * lock in save directory
 # * search through undo
 
