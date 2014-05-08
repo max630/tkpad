@@ -337,27 +337,20 @@ proc make_main {} {
 }
 
 proc handle_global_search_pattern {_n _i write} {
-    puts [list "handle_global_search_pattern" $_n $_i $write]
     if {$write ne "write"} {
         return
     }
 
     global next_note_id notes global_search_pattern
-    puts "max: $next_note_id"
-    puts [array names notes]
     set prev_shown ""
     for {set i 0} {$i < $next_note_id} {incr i} {
         if {[catch { set content $notes($i,text) }] != 0} {
-            puts "Fail to read: $i"
             continue
         }
         set btn ".n.button_$idx"
 
-        puts "Read: $i"
         if {[string first $global_search_pattern $content] >= 0} {
-            puts "Found: $i"
             if {[winfo manager $btn] eq ""} {
-                puts "Show: $i"
                 if {$prev_shown eq ""} {
                     pack $btn
                 } else {
@@ -366,14 +359,11 @@ proc handle_global_search_pattern {_n _i write} {
             }
             set prev_shown $i
         } else {
-            puts "Not Found: $i"
             if {[winfo ismapped $btn] ne ""} {
-                puts "Hide: $i"
                 pack forget $btn
             }
         }
     }
-    puts "Done: $i"
 }
 
 main
