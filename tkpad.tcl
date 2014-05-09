@@ -225,16 +225,16 @@ proc new_note {} {
     set idx $next_note_id
     incr next_note_id
     create_note $idx
-    button [note_button_tk $idx] -command [list show_note $idx]
+    button [note_button_tk $idx] -command [list show_note $idx] -padx 0 -pady 0
     trace add variable notes($idx,title) write [list handle_titleChanged $idx]
     set notes($idx,title) $idx
-    pack [note_button_tk $idx]
+    pack [note_button_tk $idx] -anchor w
 }
 
 proc restore_note {idx content} {
     global next_note_id notes
-    button [note_button_tk $idx] -command [list show_note $idx]
-    pack [note_button_tk $idx]
+    button [note_button_tk $idx] -command [list show_note $idx] -padx 0 -pady 0
+    pack [note_button_tk $idx] -anchor w
     trace add variable notes($idx,title) write [list handle_titleChanged $idx]
     set notes($idx,text) $content
     set first_newline [string first "\n" $content]
