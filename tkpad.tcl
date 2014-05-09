@@ -327,7 +327,7 @@ proc make_main {} {
     frame .n
     scrollbar .n.scroll -takefocus 0
     pack .n.scroll -side right -expand 0 -fill y
-    text .n.scrolled -yscrollcommand {.n.scroll set} -height 1
+    text .n.scrolled -yscrollcommand {.n.scroll set} -height 1 -state disabled
     pack .n.scrolled -expand 1 -fill both
     frame .n.scrolled.buttons
     .n.scrolled window create end -window .n.scrolled.buttons
