@@ -229,14 +229,12 @@ proc new_note {} {
     trace add variable notes($idx,title) write [list handle_titleChanged $idx]
     set notes($idx,title) $idx
     pack [note_button_tk $idx]
-    .n.scrolled configure -height [winfo reqheight .n.scrolled.buttons] -width [winfo reqheight .n.scrolled.buttons]
 }
 
 proc restore_note {idx content} {
     global next_note_id notes
     button [note_button_tk $idx] -command [list show_note $idx]
     pack [note_button_tk $idx]
-    .n.scrolled configure -height [winfo reqheight .n.scrolled.buttons] -width [winfo reqheight .n.scrolled.buttons]
     trace add variable notes($idx,title) write [list handle_titleChanged $idx]
     set notes($idx,text) $content
     set first_newline [string first "\n" $content]
@@ -329,11 +327,10 @@ proc make_main {} {
     frame .n
     scrollbar .n.scroll -takefocus 0
     pack .n.scroll -side right -expand 0 -fill y
-    canvas .n.scrolled -yscrollcommand {.n.scroll set}
+    text .n.scrolled -yscrollcommand {.n.scroll set} -height 1
     pack .n.scrolled -expand 1 -fill both
     frame .n.scrolled.buttons
-    .n.scrolled create window 0 0 -window .n.scrolled.buttons -anchor nw
-    .n.scrolled configure -height [winfo reqheight .n.scrolled.buttons] -width [winfo reqheight .n.scrolled.buttons]
+    .n.scrolled window create end -window .n.scrolled.buttons
 
     pack .n -side top -expand 1 -fill both
     pack .b -side top -expand 0 -fill x
@@ -351,6 +348,7 @@ proc make_main {} {
 
     global icon_photo_name
     wm iconphoto . -default $icon_photo_name
+    wm geometry . 250x250
 }
 
 proc handle_global_search_pattern {_n _i write} {
@@ -382,7 +380,6 @@ proc handle_global_search_pattern {_n _i write} {
             }
         }
     }
-    .n.scrolled configure -height [winfo reqheight .n.scrolled.buttons] -width [winfo reqheight .n.scrolled.buttons]
 }
 
 main
