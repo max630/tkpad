@@ -368,9 +368,9 @@ proc handle_global_search_pattern {_n _i write} {
             if {[winfo manager $btn] eq ""} {
                 #TODO: fix tab order
                 if {$prev_shown eq ""} {
-                    pack $btn
+                    pack $btn -anchor w
                 } else {
-                    pack $btn -before [note_button_tk $prev_shown]
+                    pack $btn -before [note_button_tk $prev_shown] -anchor w
                 }
             }
             set prev_shown $i
