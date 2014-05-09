@@ -359,6 +359,10 @@ proc make_main {} {
     global icon_photo_name
     wm iconphoto . -default $icon_photo_name
     wm geometry . 250x250
+
+    bind . <Control-f> [list focus .b.search]
+    bind . <Control-q> [list focus .b.quit]
+    bind . <Control-n> [list focus .b.new]
 }
 
 proc handle_global_search_pattern {_n _i write} {
