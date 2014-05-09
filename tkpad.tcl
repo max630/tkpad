@@ -64,6 +64,8 @@ vTefzVmeAYbA6JgiUoZoy70qxs5nPb/R/jT+jygAADs=}
     set icon_photo_name [image create photo -data $icon_photo_base64]
     global global_search_pattern
     set global_search_pattern ""
+    global tray_disabled
+    set tray_disabled 0
 }
 
 proc init_fs {} {
@@ -78,7 +80,12 @@ proc load_config {} {
         source $config
     } else {
         set f [open $config w]
+        puts $f "# uncomment and edit the following:"
+        puts $f ""
         puts $f "# font configure TkFixedFont -family {MS Comic Sans}"
+        puts $f ""
+        puts $f "# global tray_disabled"
+        puts $f "# set tray_disabled 1"
         close $f
     }
 }
@@ -297,8 +304,10 @@ proc winico_callback {event} {
 }
 
 proc make_tray {} {
-    global has_tray
-    if {![catch {package require tktray}]} {
+    global has_tray tray_disabled
+    if {$tray_disabled} {
+        set has_tray 0
+    } elseif {![catch {package require tktray}]} {
         # apt-get install tk-tktray
         make_tray_tktray
         set has_tray 1
