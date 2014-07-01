@@ -102,6 +102,7 @@ proc load_notes {} {
             restore_note $note_idx $note_content
         }
     }
+    ui_update_notes
 }
 
 proc note_text_tk {idx} {
@@ -236,6 +237,7 @@ proc new_note {} {
     button [note_button_tk $idx] -command [list show_note $idx] -padx 0 -pady 0
     trace add variable notes($idx,title) write [list handle_titleChanged $idx]
     set notes($idx,title) $idx
+    set notes($idx,visible) 1
     pack [note_button_tk $idx] -anchor w
 }
 
@@ -245,6 +247,7 @@ proc restore_note {idx content} {
     pack [note_button_tk $idx] -anchor w
     trace add variable notes($idx,title) write [list handle_titleChanged $idx]
     set notes($idx,text) $content
+    set notes($idx,visible) 1
     set first_newline [string first "\n" $content]
     if {$first_newline > 0} {
         set notes($idx,title) [string range $content 0 [expr $first_newline - 1]]
@@ -372,7 +375,6 @@ proc handle_global_search_pattern {_n _i write} {
     }
 
     global next_note_id notes global_search_pattern
-    set prev_shown ""
     for {set i 0} {$i < $next_note_id} {incr i} {
         if {[catch { set content $notes($i,text) }] != 0} {
             continue
@@ -380,19 +382,25 @@ proc handle_global_search_pattern {_n _i write} {
         set btn [note_button_tk $i]
 
         if {$global_search_pattern eq "" || [string first $global_search_pattern $content] >= 0} {
-            if {[winfo manager $btn] eq ""} {
-                #TODO: fix tab order
-                if {$prev_shown eq ""} {
-                    pack $btn -anchor w
-                } else {
-                    pack $btn -before [note_button_tk $prev_shown] -anchor w
-                }
-            }
-            set prev_shown $i
+            set notes($i,visible) 1
         } else {
-            if {[winfo ismapped $btn] ne ""} {
-                pack forget $btn
-            }
+            set notes($i,visible) 0
+        }
+    }
+    ui_update_notes
+}
+
+proc ui_update_notes {} {
+    puts ui_update_notes
+    global next_note_id notes
+    for {set i 0} {$i < $next_note_id} {incr i} {
+        if {[catch { set visible $notes($i,visible) }] != 0} {
+            continue
+        }
+        if {$visible} {
+            pack [note_button_tk $i] -anchor w
+        } else {
+            pack forget [note_button_tk $i]
         }
     }
 }
