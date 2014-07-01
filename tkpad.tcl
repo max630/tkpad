@@ -11,6 +11,7 @@ exec wish "$0" -- "$@"
 # + warn and continue if tray library not available
 # + search through all
 #  * fix focus order after search
+# * sort alphabetically
 # * scrolled button frame
 #  * fix the scroll itself
 # * tree structure of notes
