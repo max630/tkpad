@@ -220,7 +220,9 @@ proc handle_titleChanged {idx notes_name note_title_idx write} {
     if {[winfo exists $note_name]} {
         wm title $note_name "Note: $notes($note_title_idx)"
     }
-    [note_button_tk $idx] configure -text "$notes($note_title_idx)"
+    if {[winfo exists [note_button_tk $idx]]} {
+        [note_button_tk $idx] configure -text "$notes($note_title_idx)"
+    }
 }
 
 proc close_note {idx} {
@@ -234,7 +236,6 @@ proc new_note {} {
     set idx $next_note_id
     incr next_note_id
     create_note $idx
-    button [note_button_tk $idx] -command [list show_note $idx] -padx 0 -pady 0
     trace add variable notes($idx,title) write [list handle_titleChanged $idx]
     set notes($idx,title) $idx
     set notes($idx,visible) 1
@@ -243,7 +244,6 @@ proc new_note {} {
 
 proc restore_note {idx content} {
     global next_note_id notes
-    button [note_button_tk $idx] -command [list show_note $idx] -padx 0 -pady 0
     trace add variable notes($idx,title) write [list handle_titleChanged $idx]
     set notes($idx,text) $content
     set notes($idx,visible) 1
@@ -402,6 +402,9 @@ proc ui_update_notes {} {
             continue
         }
         if {$visible} {
+            if {![winfo exists [note_button_tk $i]]} {
+                button [note_button_tk $i] -command [list show_note $i] -text $notes($i,title) -padx 0 -pady 0
+            }
             pack [note_button_tk $i] -anchor w
         }
     }
