@@ -238,13 +238,12 @@ proc new_note {} {
     trace add variable notes($idx,title) write [list handle_titleChanged $idx]
     set notes($idx,title) $idx
     set notes($idx,visible) 1
-    pack [note_button_tk $idx] -anchor w
+    ui_update_notes
 }
 
 proc restore_note {idx content} {
     global next_note_id notes
     button [note_button_tk $idx] -command [list show_note $idx] -padx 0 -pady 0
-    pack [note_button_tk $idx] -anchor w
     trace add variable notes($idx,title) write [list handle_titleChanged $idx]
     set notes($idx,text) $content
     set notes($idx,visible) 1
