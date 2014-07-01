@@ -391,7 +391,6 @@ proc handle_global_search_pattern {_n _i write} {
 }
 
 proc ui_update_notes {} {
-    puts ui_update_notes
     global next_note_id notes
     for {set i 0} {$i < $next_note_id} {incr i} {
         if {[catch { set visible $notes($i,visible) }] != 0} {
