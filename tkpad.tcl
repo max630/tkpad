@@ -393,13 +393,17 @@ proc handle_global_search_pattern {_n _i write} {
 proc ui_update_notes {} {
     global next_note_id notes
     for {set i 0} {$i < $next_note_id} {incr i} {
+        set bname [note_button_tk $i]
+        if {[winfo exists $bname] && [winfo ismapped $bname] ne ""} {
+            pack forget [note_button_tk $i]
+        }
+    }
+    for {set i 0} {$i < $next_note_id} {incr i} {
         if {[catch { set visible $notes($i,visible) }] != 0} {
             continue
         }
         if {$visible} {
             pack [note_button_tk $i] -anchor w
-        } else {
-            pack forget [note_button_tk $i]
         }
     }
 }
